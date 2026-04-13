@@ -1,31 +1,36 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { ETHPrice } from './SubInfo';
 import { COLORS, SIZES, FONTS } from '../constants';
 
-const DetailsBid = ({ bid }) => {
+const DetailsBid = ({ bid, onPressBidder }) => {
   return (
-    <View
+    <TouchableOpacity
+      disabled={!onPressBidder}
+      onPress={() => onPressBidder?.(bid.name)}
       style={{
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginVertical: SIZES.base,
-        paddingHorizontal: SIZES.base * 2,
+        paddingHorizontal: SIZES.font,
+        paddingVertical: SIZES.font,
+        backgroundColor: COLORS.card,
+        borderRadius: SIZES.large,
       }}
     >
       <Image
         source={bid.image}
         resizeMode="contain"
-        style={{ width: 48, height: 48 }}
+        style={{ width: 48, height: 48, borderRadius: 24, marginRight: SIZES.font }}
       ></Image>
-      <View>
+      <View style={{ flex: 1 }}>
         <Text
           style={{
             fontFamily: FONTS.semiBold,
             fontSize: SIZES.small,
-            color: COLORS.primary,
+            color: onPressBidder ? COLORS.accent : COLORS.primary,
           }}
         >
           Bid placed by {bid.name}
@@ -34,7 +39,7 @@ const DetailsBid = ({ bid }) => {
           style={{
             fontFamily: FONTS.regular,
             fontSize: SIZES.small - 2,
-            color: COLORS.secondary,
+            color: COLORS.muted,
             marginTop: 3,
           }}
         >
@@ -42,7 +47,7 @@ const DetailsBid = ({ bid }) => {
         </Text>
       </View>
       <ETHPrice price={bid.price} />
-    </View>
+    </TouchableOpacity>
   );
 };
 

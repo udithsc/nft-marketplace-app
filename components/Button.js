@@ -3,25 +3,31 @@ import React from 'react';
 import { COLORS, SIZES, FONTS, SHADOWS } from '../constants';
 
 export const CircleButton = ({ imgUrl, handlePress, ...props }) => {
+  const {
+    backgroundColor = 'rgba(255,255,255,0.92)',
+    tintColor,
+    ...styleProps
+  } = props;
+
   return (
     <TouchableOpacity
       style={{
         width: 40,
         height: 40,
-        backgroundColor: COLORS.white,
+        backgroundColor,
         position: 'absolute',
         borderRadius: SIZES.extraLarge,
         alignItems: 'center',
         justifyContent: 'center',
         ...SHADOWS.light,
-        ...props,
+        ...styleProps,
       }}
       onPress={handlePress}
     >
       <Image
         source={imgUrl}
         resizeMode="contain"
-        style={{ width: 24, height: 24 }}
+        style={{ width: 24, height: 24, tintColor }}
       />
     </TouchableOpacity>
   );
@@ -31,10 +37,11 @@ export const RectButton = ({ minWidth, fontSize, handlePress, ...props }) => {
   return (
     <TouchableOpacity
       style={{
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.accent,
         borderRadius: SIZES.extraLarge,
         minWidth: minWidth,
-        padding: SIZES.small,
+        paddingVertical: SIZES.small + 2,
+        paddingHorizontal: SIZES.medium,
         ...props,
       }}
       onPress={handlePress}
@@ -43,7 +50,7 @@ export const RectButton = ({ minWidth, fontSize, handlePress, ...props }) => {
         style={{
           fontFamily: FONTS.semiBold,
           fontSize: fontSize,
-          color: COLORS.white,
+          color: COLORS.primary,
           textAlign: 'center',
         }}
       >

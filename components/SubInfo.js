@@ -1,7 +1,13 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { assets, COLORS, FONTS, SHADOWS, SIZES } from '../constants';
 
-export const NFTTitle = ({ title, subTitle, titleSize, subTitleSize }) => {
+export const NFTTitle = ({
+  title,
+  subTitle,
+  titleSize,
+  subTitleSize,
+  onPressSubTitle,
+}) => {
   return (
     <View>
       <Text
@@ -13,15 +19,18 @@ export const NFTTitle = ({ title, subTitle, titleSize, subTitleSize }) => {
       >
         {title}
       </Text>
-      <Text
-        style={{
-          fontFamily: FONTS.regular,
-          fontSize: subTitleSize,
-          color: COLORS.primary,
-        }}
-      >
-        {subTitle}
-      </Text>
+      <TouchableOpacity disabled={!onPressSubTitle} onPress={onPressSubTitle}>
+        <Text
+          style={{
+            fontFamily: FONTS.regular,
+            fontSize: subTitleSize,
+            color: onPressSubTitle ? COLORS.accent : COLORS.muted,
+            marginTop: SIZES.base / 2,
+          }}
+        >
+          by {subTitle}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -41,7 +50,7 @@ export const ETHPrice = ({ price }) => {
           color: COLORS.primary,
         }}
       >
-        {price}
+        {price} ETH
       </Text>
     </View>
   );
@@ -53,9 +62,12 @@ export const ImageCmp = ({ imgUrl, index }) => {
       source={imgUrl}
       resizeMode="contain"
       style={{
-        width: 48,
-        height: 48,
+        width: 40,
+        height: 40,
         marginLeft: index === 0 ? 0 : -SIZES.font,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: COLORS.white,
       }}
     />
   );
@@ -72,25 +84,28 @@ export const People = () => {
     </View>
   );
 };
-export const EndDate = () => {
+export const EndDate = ({ endingIn }) => {
   return (
     <View
       style={{
-        paddingHorizontal: SIZES.font,
-        paddingVertical: SIZES.base,
-        backgroundColor: COLORS.white,
+        paddingHorizontal: SIZES.font + 2,
+        paddingVertical: SIZES.base + 2,
+        backgroundColor: COLORS.card,
         justifyContent: 'center',
         alignItems: 'center',
         ...SHADOWS.light,
         elevation: 1,
-        maxWidth: '50%',
+        maxWidth: '55%',
+        borderRadius: SIZES.medium,
       }}
     >
       <Text
         style={{
           fontFamily: FONTS.regular,
           fontSize: SIZES.small,
-          color: COLORS.primary,
+          color: COLORS.muted,
+          textTransform: 'uppercase',
+          letterSpacing: 0.5,
         }}
       >
         Ending In
@@ -100,14 +115,15 @@ export const EndDate = () => {
           fontFamily: FONTS.semiBold,
           fontSize: SIZES.medium,
           color: COLORS.primary,
+          marginTop: 2,
         }}
-      >
-        12h 30m
+        >
+        {endingIn}
       </Text>
     </View>
   );
 };
-export const SubInfo = () => {
+export const SubInfo = ({ endingIn = '12h 30m' }) => {
   return (
     <View
       style={{
@@ -116,10 +132,11 @@ export const SubInfo = () => {
         marginTop: -SIZES.extraLarge,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
       }}
     >
       <People />
-      <EndDate />
+      <EndDate endingIn={endingIn} />
     </View>
   );
 };

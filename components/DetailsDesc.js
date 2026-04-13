@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { ETHPrice, NFTTitle } from './SubInfo';
 import { COLORS, SIZES, FONTS } from '../constants';
 
-const DetailsDesc = ({ data }) => {
+const DetailsDesc = ({ data, onCreatorPress }) => {
   const [text, setText] = useState(data.description.slice(0, 100));
   const [readMore, setReadMore] = useState(false);
 
@@ -22,10 +22,18 @@ const DetailsDesc = ({ data }) => {
           subTitle={data.creator}
           titleSize={SIZES.extraLarge}
           subTitleSize={SIZES.font}
+          onPressSubTitle={onCreatorPress}
         />
         <ETHPrice price={data.price} />
       </View>
-      <View style={{ marginVertical: SIZES.extraLarge * 1.5 }}>
+      <View
+        style={{
+          marginTop: SIZES.extraLarge,
+          padding: SIZES.font + 2,
+          backgroundColor: COLORS.surface,
+          borderRadius: SIZES.large,
+        }}
+      >
         <Text
           style={{
             fontSize: SIZES.font,
@@ -41,7 +49,7 @@ const DetailsDesc = ({ data }) => {
               fontSize: SIZES.small,
               fontFamily: FONTS.regular,
               color: COLORS.secondary,
-              lineHeight: SIZES.large,
+              lineHeight: 22,
             }}
           >
             {text}
@@ -50,7 +58,7 @@ const DetailsDesc = ({ data }) => {
               style={{
                 fontSize: SIZES.small,
                 fontFamily: FONTS.semiBold,
-                color: COLORS.primary,
+                color: COLORS.accent,
               }}
               onPress={() => {
                 if (!readMore) {
