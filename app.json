@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "nft_marketplace_app",
+    "owner": "udithsc",
     "slug": "nft_marketplace_app",
     "scheme": "nftmarketplaceapp",
     "version": "1.0.0",
@@ -18,7 +19,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/089e939d-10a8-4787-98a7-bbd8e543896b"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -39,6 +41,14 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "089e939d-10a8-4787-98a7-bbd8e543896b"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }

@@ -3,8 +3,10 @@ import {
   View,
   SafeAreaView,
   FlatList,
+  ScrollView,
   Text,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -44,6 +46,58 @@ const Home = () => {
   const handleQuickBid = (item) => {
     placeBid(item.id, getNextBidAmount(item.highestBid, 0.25));
   };
+
+  const renderNFTCard = (item) => (
+    <NFTCard
+      key={item.id}
+      data={item}
+      isFavorite={favorites.includes(item.id)}
+      onToggleFavorite={() => toggleFavorite(item.id)}
+      onQuickBid={() => handleQuickBid(item)}
+      onCreatorPress={() =>
+        navigation.navigate('Profile', {
+          profileId: getProfileByName(item.creator)?.id,
+          name: item.creator,
+        })
+      }
+    />
+  );
+
+  const renderEmptyState = () => (
+    <View
+      style={{
+        marginTop: SIZES.xxLarge,
+        marginHorizontal: SIZES.font,
+        padding: SIZES.extraLarge,
+        borderRadius: SIZES.extraLarge,
+        backgroundColor: COLORS.card,
+        alignItems: 'center',
+      }}
+    >
+      <Text
+        style={{
+          color: COLORS.primary,
+          fontFamily: FONTS.bold,
+          fontSize: SIZES.large,
+        }}
+      >
+        No items matched this view
+      </Text>
+      <Text
+        style={{
+          marginTop: 8,
+          color: COLORS.muted,
+          fontFamily: FONTS.regular,
+          fontSize: SIZES.font,
+          lineHeight: 20,
+          textAlign: 'center',
+        }}
+      >
+        Try another search, switch categories, or open the watchlist after saving
+        a few pieces.
+      </Text>
+    </View>
+  );
 
   const renderSectionHeader = () => (
     <View>
@@ -181,65 +235,30 @@ const Home = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <FocusedStatusBar background={COLORS.primary} />
       <View style={{ flex: 1 }}>
-        <View style={{ zIndex: 0 }}>
-          <FlatList
-            data={filteredData}
-            renderItem={({ item }) => (
-              <NFTCard
-                data={item}
-                isFavorite={favorites.includes(item.id)}
-                onToggleFavorite={() => toggleFavorite(item.id)}
-                onQuickBid={() => handleQuickBid(item)}
-                onCreatorPress={() =>
-                  navigation.navigate('Profile', {
-                    profileId: getProfileByName(item.creator)?.id,
-                    name: item.creator,
-                  })
-                }
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom: SIZES.xxLarge,
-            }}
-            ListHeaderComponent={renderSectionHeader}
-            ListEmptyComponent={
-              <View
-                style={{
-                  marginTop: SIZES.xxLarge,
-                  marginHorizontal: SIZES.font,
-                  padding: SIZES.extraLarge,
-                  borderRadius: SIZES.extraLarge,
-                  backgroundColor: COLORS.card,
-                  alignItems: 'center',
-                }}
-              >
-                <Text
-                  style={{
-                    color: COLORS.primary,
-                    fontFamily: FONTS.bold,
-                    fontSize: SIZES.large,
-                  }}
-                >
-                  No items matched this view
-                </Text>
-                <Text
-                  style={{
-                    marginTop: 8,
-                    color: COLORS.muted,
-                    fontFamily: FONTS.regular,
-                    fontSize: SIZES.font,
-                    lineHeight: 20,
-                    textAlign: 'center',
-                  }}
-                >
-                  Try another search, switch categories, or open the watchlist
-                  after saving a few pieces.
-                </Text>
-              </View>
-            }
-          />
+        <View style={{ flex: 1, zIndex: 0 }}>
+          {Platform.OS === 'web' ? (
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{ paddingBottom: SIZES.xxLarge }}
+              showsVerticalScrollIndicator={false}
+            >
+              {renderSectionHeader()}
+              {filteredData.length ? filteredData.map(renderNFTCard) : renderEmptyState()}
+            </ScrollView>
+          ) : (
+            <FlatList
+              style={{ flex: 1 }}
+              data={filteredData}
+              renderItem={({ item }) => renderNFTCard(item)}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: SIZES.xxLarge,
+              }}
+              ListHeaderComponent={renderSectionHeader}
+              ListEmptyComponent={renderEmptyState}
+            />
+          )}
         </View>
         <View
           style={{
